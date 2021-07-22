@@ -44,13 +44,14 @@ namespace dedsharp
                 window.UpdateFrequency=60;
                 window.KeyDown +=  keyPress;
                 window.TextInput += textInput;
+                
                 window.Run();
                 
                 Vector2 cursor_pos = new Vector2(editor.cursor_col * Font.FONT_CHAR_WIDTH * Font.FONT_SCALE, 
                                                 editor.cursor_row * Font.FONT_CHAR_HEIGHT * Font.FONT_SCALE);
                 camera_vel = Vector2.Multiply(Vector2.Subtract(cursor_pos,camera_pos),2.0f);
                 camera_pos = Vector2.Add(camera_pos,Vector2.Multiply(camera_vel,DELTA_TIME));
-                
+
             }
         }
         static void keyPress(KeyboardKeyEventArgs k)

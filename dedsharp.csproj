@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="freetype" Version="2.8.0.1" />
     <PackageReference Include="openTK" Version="4.6.4" />
+    <PackageReference Include="SharpFont" Version="4.0.1" />
   </ItemGroup>
 
 </Project>

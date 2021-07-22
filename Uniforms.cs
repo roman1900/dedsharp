@@ -1,0 +1,61 @@
+using System.Collections.Generic;
+using OpenTK.Graphics.OpenGL;
+namespace dedsharp
+{
+	public class Uniforms 
+	{
+		public enum Uniform_Slot
+		{
+			UNIFORM_SLOT_TIME = 0,
+			UNIFORM_SLOT_RESOLUTION,
+			UNIFORM_SLOT_CAMERA_POS,
+			UNIFORM_SLOT_CAMERA_SCALE,
+			UNIFORM_SLOT_CURSOR_POS,
+			UNIFORM_SLOT_CURSOR_HEIGHT,
+			UNIFORM_SLOT_LAST_STROKE,
+			COUNT_UNIFORM_SLOTS,
+		}
+		public struct Uniform_Def
+		{
+			public Uniform_Slot slot;
+			public string name;
+			public Uniform_Def (Uniform_Slot slot, string name)
+			{
+				this.slot = slot;
+				this.name = name;
+			}
+		}
+		static Dictionary<int,Uniform_Def> uniform_defs= new Dictionary<int,Uniform_Def>
+		{
+		   {(int)Uniform_Slot.UNIFORM_SLOT_TIME,new Uniform_Def(Uniform_Slot.UNIFORM_SLOT_TIME,"time")},
+		   {(int)Uniform_Slot.UNIFORM_SLOT_RESOLUTION,new Uniform_Def(Uniform_Slot.UNIFORM_SLOT_RESOLUTION,"resolution")},
+			/*[UNIFORM_SLOT_CAMERA_POS] = {
+				.slot = UNIFORM_SLOT_CAMERA_POS,
+				.name = "camera_pos",
+			},
+			[UNIFORM_SLOT_CAMERA_SCALE] = {
+				.slot = UNIFORM_SLOT_CAMERA_SCALE,
+				.name = "camera_scale",
+			},
+			[UNIFORM_SLOT_CURSOR_POS] = {
+				.slot = UNIFORM_SLOT_CURSOR_POS,
+				.name = "cursor_pos",
+			},
+			[UNIFORM_SLOT_CURSOR_HEIGHT] = {
+				.slot = UNIFORM_SLOT_CURSOR_HEIGHT,
+				.name = "cursor_height",
+			},
+			[UNIFORM_SLOT_LAST_STROKE] = {
+				.slot = UNIFORM_SLOT_LAST_STROKE,
+				.name = "last_stroke",
+			},*/
+		};
+		public void get_uniform_location(int program, int[] locations)
+		{
+			for (Uniform_Slot slot = 0; slot < Uniform_Slot.COUNT_UNIFORM_SLOTS; ++slot)
+			{
+				locations[(int)slot] = GL.GetUniformLocation(program,uniform_defs[(int)slot].name);
+			}
+		}
+	}
+}

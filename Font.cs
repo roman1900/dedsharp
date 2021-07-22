@@ -8,7 +8,7 @@ namespace dedsharp
 		public const int FONT_ROWS = 7;
 		public const float FONT_CHAR_WIDTH = (FONT_WIDTH / FONT_COLS);
 		public const float FONT_CHAR_HEIGHT = (FONT_HEIGHT / FONT_ROWS);
-		public const int FONT_SCALE = 5;
+		public const float FONT_SCALE = 5.0f;
 
 	}
 }
