@@ -37,7 +37,7 @@ namespace dedsharp
 		public uint atlas_width;
 		public uint atlas_height;
 		public int glyphs_texture;
-		public int[] uniforms = new int[COUNT_UNIFORM_SLOTS];
+		public int[] uniforms = new int[(int)Uniforms.Uniform_Slot.COUNT_UNIFORM_SLOTS];
 		public int glyphs_count;
 		public Free_Glyph[] glyphs = new Free_Glyph[FREE_GLYPH_BUFFER_CAP];
 		public Glyph_Metric[] metrics = new Glyph_Metric[128];

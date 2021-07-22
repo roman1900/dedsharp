@@ -6,7 +6,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System;
-using SharpFont;
+//using SharpFont;
 
 namespace dedsharp
 {
@@ -34,10 +34,10 @@ namespace dedsharp
 			GL.Enable(EnableCap.DebugOutput);
 			DebugProc MCB = MessageCallback;
 			GL.DebugMessageCallback(MCB,new System.IntPtr(0));
-			FreeGlyphBuffer fgb = new FreeGlyphBuffer(
+			/*FreeGlyphBuffer fgb = new FreeGlyphBuffer(
                            face,
                            "./shaders/free_glyph.vert",
-                           "./shaders/free_glyph.frag");
+                           "./shaders/free_glyph.frag");*/
 			
 		}
     }
