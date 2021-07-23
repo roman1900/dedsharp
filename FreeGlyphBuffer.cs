@@ -9,6 +9,7 @@ namespace dedsharp
 {
 	public class FreeGlyphBuffer
 	{
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct Free_Glyph {
 			public Vector2 pos;
 			public Vector2 size;
@@ -45,7 +46,7 @@ namespace dedsharp
 			{(int)Free_Gylph_Attr.FREE_GLYPH_ATTR_UV_POS,new Attr_Def(Marshal.OffsetOf<Free_Glyph>("uv_pos"),2,VertexAttribPointerType.Float)},
 			{(int)Free_Gylph_Attr.FREE_GLYPH_ATTR_UV_SIZE,new Attr_Def(Marshal.OffsetOf<Free_Glyph>("uv_size"),2,VertexAttribPointerType.Float)},
 			{(int)Free_Gylph_Attr.FREE_GLYPH_ATTR_FG_COLOR,new Attr_Def(Marshal.OffsetOf<Free_Glyph>("fg_color"),4,VertexAttribPointerType.Float)},
-			{(int)Free_Gylph_Attr.FREE_GLYPH_ATTR_BG_COLOR,new Attr_Def(Marshal.OffsetOf<Free_Glyph>("bg-color"),4,VertexAttribPointerType.Float)},
+			{(int)Free_Gylph_Attr.FREE_GLYPH_ATTR_BG_COLOR,new Attr_Def(Marshal.OffsetOf<Free_Glyph>("bg_color"),4,VertexAttribPointerType.Float)},
 		};
 		public struct Glyph_Metric {
 			public float ax; // advance.x
@@ -79,7 +80,7 @@ namespace dedsharp
 			GL.BindVertexArray(vao);
 			vbo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer,vbo);
-			GL.BufferData(BufferTarget.ArrayBuffer,Marshal.SizeOf(glyphs),glyphs,BufferUsageHint.DynamicDraw);
+			GL.BufferData(BufferTarget.ArrayBuffer,Marshal.SizeOf<Free_Glyph>() * glyphs.Length,glyphs,BufferUsageHint.DynamicDraw);
 			for (Free_Gylph_Attr attr = 0; attr < Free_Gylph_Attr.COUNT_FREE_GLYPH_ATTRS; ++attr) {
 				GL.EnableVertexAttribArray((int)attr);
 				switch (glyph_attr_defs[(int)attr].type) {
