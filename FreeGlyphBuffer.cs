@@ -133,7 +133,7 @@ namespace dedsharp
 				}
 			}
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.GenTextures(1,glyphs_texture);
+			GL.GenTextures(1,glyphs_texture); //BROKEN HERE
 			GL.BindTexture(TextureTarget.Texture2D,glyphs_texture[0]); //TODO: This BindTexture usage may be a problem
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMagFilter,new int[]{(int)TextureMagFilter.Linear});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMinFilter,new int[]{(int)TextureMinFilter.Linear});
