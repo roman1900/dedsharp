@@ -35,12 +35,12 @@ namespace dedsharp
 			base.OnLoad();
 			//TODO: exception checking
 			Library library = new Library();
-			const string font_file_path = "./VictorMono-Regualr.ttf";
+			const string font_file_path = "./VictorMono-Regular.ttf";
 			Face face = new Face(library, font_file_path);
 			uint pixel_size = FREE_GLYPH_FONT_SIZE;
 			face.SetPixelSizes(0,pixel_size);
 
-			
+
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha,BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.DebugOutput);
