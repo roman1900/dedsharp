@@ -33,11 +33,12 @@ namespace dedsharp
                 }
             }
             
-            NativeWindowSettings nativeWindowSettings = new NativeWindowSettings();
-            nativeWindowSettings.Title="Text Editor";
-            nativeWindowSettings.Size = new Vector2i(SCREEN_WIDTH,SCREEN_HEIGHT);
+            NativeWindowSettings nativeWindowSettings = new NativeWindowSettings(){
+                Title="Text Editor",
+                Size = new Vector2i(SCREEN_WIDTH,SCREEN_HEIGHT),
+            };
 
-            using (window = new Window(GameWindowSettings.Default,NativeWindowSettings.Default,editor))
+            using (window = new Window(GameWindowSettings.Default,nativeWindowSettings,editor))
             {
                 window.UpdateFrequency=FPS;
                 window.KeyDown +=  keyPress;

@@ -33,11 +33,16 @@ namespace dedsharp
 		}
 		private void render_editor_into_fgb()
 		{
-			int w,h;
-			w = this.Size.X;
-			h = this.Size.Y;
 			float max_line_len = 0.0f;
 			fgb.free_glyph_buffer_use();
+
+			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION], this.Size.X, this.Size.Y);
+			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],this.RenderTime / 1000.0f);
+			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_POS],camera_pos.X,camera_pos.Y);
+			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_SCALE],camera_scale);
+
+			fgb.free_glyph_buffer_clear();
+
 			for (int row= 0; row < editor.size; ++row) 
 			{
 				Editor.Line line = editor.lines[row];
@@ -78,7 +83,7 @@ namespace dedsharp
 			base.OnUpdateFrame(e);
 			GL.ClearColor(0.0f,0.0f,0.0f,1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit);
-			
+			render_editor_into_fgb();
 			SwapBuffers();
 		}
 
@@ -92,7 +97,7 @@ namespace dedsharp
 
 			base.OnLoad();
 			
-
+			
 			//TODO: exception checking
 			Library library = new Library();
 			const string font_file_path = "./VictorMono-Regular.ttf";
