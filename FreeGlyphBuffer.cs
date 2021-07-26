@@ -80,9 +80,9 @@ namespace dedsharp
 			GL.BindVertexArray(vao);
 			vbo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer,vbo);
-			GL.BufferData(BufferTarget.ArrayBuffer,Marshal.SizeOf<Free_Glyph>() * glyphs.Length,glyphs,BufferUsageHint.DynamicDraw);
+			GL.BufferData<Free_Glyph>(BufferTarget.ArrayBuffer,Marshal.SizeOf<Free_Glyph>() * glyphs.Length,glyphs,BufferUsageHint.DynamicDraw);
 			for (Free_Gylph_Attr attr = 0; attr < Free_Gylph_Attr.COUNT_FREE_GLYPH_ATTRS; ++attr) {
-				GL.EnableVertexAttribArray((int)attr);
+				
 				switch (glyph_attr_defs[(int)attr].type) {
 					case VertexAttribPointerType.Float:
 						GL.VertexAttribPointer((int)attr,
@@ -102,6 +102,7 @@ namespace dedsharp
 					default:
 						throw(new ArgumentOutOfRangeException("unreachable"));
 				}
+				GL.EnableVertexAttribArray((int)attr);
 				GL.VertexAttribDivisor((int)attr,1);
 			}
 
@@ -183,8 +184,8 @@ namespace dedsharp
 		public void free_glyph_buffer_sync()
 		{
 			GL.BufferSubData<Free_Glyph>(BufferTarget.ArrayBuffer,
-								new IntPtr(0),
-								glyphs_count * Marshal.SizeOf<Free_Glyph>(),
+								(IntPtr)0,
+								(IntPtr)(glyphs_count * Marshal.SizeOf<Free_Glyph>()),
 								glyphs);
 		}
 		public void free_glyph_buffer_draw()

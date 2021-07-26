@@ -40,7 +40,7 @@ namespace dedsharp
 
             using (window = new Window(GameWindowSettings.Default,nativeWindowSettings,editor))
             {
-                window.UpdateFrequency=FPS;
+                window.RenderFrequency=FPS;
                 window.KeyDown +=  keyPress;
                 window.TextInput += textInput;
                 

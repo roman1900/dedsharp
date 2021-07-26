@@ -90,6 +90,12 @@ namespace dedsharp
 		{
 			
 			base.OnUpdateFrame(e);
+			
+		}
+
+		protected override void OnRenderFrame(FrameEventArgs args)
+		{
+			base.OnRenderFrame(args);
 			GL.ClearColor(0.0f,0.0f,0.0f,1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			render_editor_into_fgb();
@@ -99,7 +105,7 @@ namespace dedsharp
 		protected override void OnResize(ResizeEventArgs e)
 		{
 			base.OnResize(e);
-			GL.Viewport(0,0,e.Width,e.Height);
+			GL.Viewport(0,0,Size.X,Size.Y);
 		}
 		protected override void OnLoad()
 		{
@@ -113,7 +119,7 @@ namespace dedsharp
 			Face face = new Face(library, font_file_path);
 			uint pixel_size = FREE_GLYPH_FONT_SIZE;
 			face.SetPixelSizes(0,pixel_size);
-
+			
 
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha,BlendingFactor.OneMinusSrcAlpha);
