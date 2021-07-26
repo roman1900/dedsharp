@@ -23,6 +23,7 @@ namespace dedsharp
 		public static float camera_scale = 3.0f;
 		Editor editor;
 		private FreeGlyphBuffer fgb;
+		private CursorRenderer cr;
 		public static void MessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, System.IntPtr message, System.IntPtr userParam )
 		{
 			Console.WriteLine($"GL CALLBACK: type = {type} severity = {severity} message = {Marshal.PtrToStringAuto(message)}");
@@ -63,7 +64,15 @@ namespace dedsharp
 				Editor.Line line = editor.lines[editor.cursor_row];
 				cursor_pos.X = fgb.free_glyph_buffer_cursor_pos(line.chars,new Vector2(0.0f,cursor_pos.Y),editor.cursor_col);
 			}
-			//TODO: cursor implementation
+			cr.cursor_renderer_use();
+			GL.Uniform2(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION],this.Size.X,this.Size.Y);
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],this.RenderTime / 1000);
+			GL.Uniform2(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_POS],camera_pos.X,camera_pos.Y);
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_SCALE], camera_scale);
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CURSOR_HEIGHT], FREE_GLYPH_FONT_SIZE);
+
+			cr.cursor_renderer_move_to(cursor_pos);
+			cr.cursor_renderer_draw();
 
 			float target_scale = 3.0f;
 			if (max_line_len > 0.0f) {
@@ -112,9 +121,10 @@ namespace dedsharp
 			DebugProc MCB = MessageCallback;
 			GL.DebugMessageCallback(MCB,new System.IntPtr(0));
 			fgb = new FreeGlyphBuffer(face,
-                           "./shaders/free_glyph.vert",
-                           "./shaders/free_glyph.frag");
-			
+                        	"./shaders/free_glyph.vert",
+                        	"./shaders/free_glyph.frag");
+			cr = new CursorRenderer("./shaders/cursor.vert",
+                    		"./shaders/cursor.frag");
 		}
     }
 }
