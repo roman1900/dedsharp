@@ -65,7 +65,7 @@ namespace dedsharp
 		public int program;
 		public int atlas_width;
 		public int atlas_height;
-		public int[] glyphs_texture;
+		public int glyphs_texture;
 		public int[] uniforms = new int[(int)Uniforms.Uniform_Slot.COUNT_UNIFORM_SLOTS];
 		public int glyphs_count;
 		public Free_Glyph[] glyphs = new Free_Glyph[FREE_GLYPH_BUFFER_CAP];
@@ -133,8 +133,8 @@ namespace dedsharp
 				}
 			}
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.GenTextures(1,glyphs_texture); //BROKEN HERE
-			GL.BindTexture(TextureTarget.Texture2D,glyphs_texture[0]); //TODO: This BindTexture usage may be a problem
+			GL.GenTextures(1,out glyphs_texture);
+			GL.BindTexture(TextureTarget.Texture2D,glyphs_texture);
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMagFilter,new int[]{(int)TextureMagFilter.Linear});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMinFilter,new int[]{(int)TextureMinFilter.Linear});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureWrapS,new int[]{(int)TextureWrapMode.ClampToEdge});
