@@ -8,22 +8,48 @@ namespace dedsharp {
 			public int capacity;
 			public int size;
 			public string chars;
+
 		}
 		private const int EDITOR_INIT_CAPACITY = 128;
+		private const int LINE_INIT_CAPACITY = 1024;
 		public string file_path;
 		public int capacity {get;set;}
 		public int size {get;set;}
 		public Line[] lines {get;set;}
 		public int cursor_row;
 		public int cursor_col;
+
+		public void line_grow(ref Line line, int n)
+		{
+			int new_capacity = line.capacity;
+			if (new_capacity < line.size) throw(new Exception("New line size smaller than current line size cannot grow"));
+			while (new_capacity - line.size < n){
+				if (new_capacity == 0){
+					new_capacity = LINE_INIT_CAPACITY;
+				}
+				else {
+					new_capacity *=2;
+				}
+			}
+			if (new_capacity != line.capacity){
+				// line.chars = realloc(line->chars, new_capacity);
+				line.capacity = new_capacity;
+			}
+		}
 		public void line_append_text(ref Line line, string text, int text_size)
 		{
 			int col = line.size;
-			line_insert_text_before(ref line, text, text_size, col);
+			line_insert_text_before(ref line, text, text_size, ref col);
 		}
-		public void line_insert_text_before(ref Line line,string text,int text_size, int col)
+		public void line_insert_text_before(ref Line line,string text,int text_size, ref int col)
 		{
-			throw(new NotImplementedException());
+			if (col > line.size) {
+				col = line.size;
+			}
+			line_grow(ref line, text.Length);
+			line.chars = line.chars.Substring(0,col)+text+line.chars.Substring(col);
+			line.size = line.chars.Length;
+			col += text_size;
 		}
 		public void line_backspace(ref Line line, ref int col)
 		{
@@ -83,8 +109,8 @@ namespace dedsharp {
 				this.cursor_row = this.size;
 			}
 			editor_grow(1);
-			Array.Copy(this.lines,this.cursor_row,this.lines,this.cursor_row+1,this.cursor_row);
-			this.lines[this.cursor_row+1]=new Line();
+			Array.Copy(this.lines,this.cursor_row,this.lines,this.cursor_row+1,1);
+			this.lines[this.cursor_row+1]=new Line(){chars="",capacity=0,size=0};
 			this.cursor_row +=1;
 			this.cursor_col = 0;
 			this.size +=1;
@@ -98,7 +124,7 @@ namespace dedsharp {
 					this.cursor_row = this.size - 1;
 				} else {
 					editor_grow(1);
-					this.lines[this.size] = new Line();
+					this.lines[this.size] = new Line(){chars="",capacity=0,size=0};
 					this.size += 1;
 				}
 			}
@@ -106,7 +132,7 @@ namespace dedsharp {
 		public void editor_insert_text_before_cursor(string text)
 		{
 			editor_create_first_new_line();
-			line_insert_text_before(ref this.lines[this.cursor_row], text, text.Length, this.cursor_col);
+			line_insert_text_before(ref this.lines[this.cursor_row], text, text.Length, ref this.cursor_col);
 		}
 
 		public void editor_backspace()
@@ -143,7 +169,7 @@ namespace dedsharp {
 			string[] file_lines = File.ReadAllLines(file_path);
 			foreach(string file_line in file_lines)
 			{
-				Line line = new Line();
+				Line line = new Line(){chars="",capacity=0,size=0};
 				line_append_text(ref line, file_line, file_line.Length);
 				this.lines[this.size-1] = line;
 				editor_insert_new_line();
