@@ -15,7 +15,7 @@ namespace dedsharp
     public class Window : GameWindow
     {
 		private Stopwatch sw = Stopwatch.StartNew();
-		public static uint FREE_GLYPH_FONT_SIZE = 20;
+		public static uint FREE_GLYPH_FONT_SIZE = 12;
 		public static int ZOOM_OUT_GLYPH_THRESHOLD = 30;
 		public static Vector2 camera_pos = new Vector2();
         public static Vector2 camera_vel = new Vector2();
@@ -114,7 +114,7 @@ namespace dedsharp
 			this.TextInput += textInput;
 			//TODO: exception checking
 			Library library = new Library();
-			const string font_file_path = "./VictorMono-Regular.ttf";
+			const string font_file_path = "./resources/VictorMono-Regular.ttf";
 			Face face = new Face(library, font_file_path,0);
 			uint pixel_size = FREE_GLYPH_FONT_SIZE;
 			face.SetPixelSizes(0,pixel_size);
