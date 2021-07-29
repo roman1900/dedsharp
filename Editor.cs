@@ -97,8 +97,13 @@ namespace dedsharp {
 				Line[] temp_lines = this.lines;
 				Array.Resize(ref temp_lines,new_capacity);
 				this.lines = temp_lines;
+				for(int i =  this.capacity == 0 ? 0 :this.capacity - 1; i < new_capacity; ++i)
+				{
+					this.lines[i] = new Line(){chars="",capacity=0,size=0};
+				}
 				this.capacity = new_capacity;
 			}
+			
 			
 		}
 
