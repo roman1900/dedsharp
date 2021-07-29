@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using OpenTK;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;

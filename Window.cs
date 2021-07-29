@@ -1,9 +1,6 @@
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using OpenTK.Input;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System;
