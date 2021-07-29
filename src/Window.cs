@@ -75,7 +75,7 @@ namespace dedsharp
 
 			float target_scale = 3.0f;
 			if (max_line_len > 0.0f) {
-				target_scale = Program.SCREEN_WIDTH / max_line_len;
+				target_scale = (float) this.Size.X / max_line_len;
 			}
 			if (target_scale > 3.0f){
 				target_scale = 3.0f;
