@@ -2,6 +2,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Runtime.InteropServices;
 using System;
 using System.Diagnostics;
@@ -36,7 +37,7 @@ namespace dedsharp
 			float max_line_len = 0.0f;
 			fgb.free_glyph_buffer_use();
 			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION], (float)this.Size.X, (float)this.Size.Y);
-			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],sw.Elapsed.TotalMilliseconds / 1000.0f);
+			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],(float) sw.Elapsed.TotalMilliseconds / 1000.0f);
 			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_POS],camera_pos.X,camera_pos.Y);
 			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_SCALE],camera_scale);
 
@@ -109,8 +110,8 @@ namespace dedsharp
 		{
 
 			base.OnLoad();
-			
-			
+			this.KeyDown +=  keyPress;
+			this.TextInput += textInput;
 			//TODO: exception checking
 			Library library = new Library();
 			const string font_file_path = "./VictorMono-Regular.ttf";
@@ -130,5 +131,50 @@ namespace dedsharp
 			cr = new CursorRenderer("./shaders/cursor.vert",
                     		"./shaders/cursor.frag");
 		}
+		private void keyPress(KeyboardKeyEventArgs k)
+        {
+            switch (k.Key)
+            {
+                case Keys.Escape:
+                    this.Close();
+                    break;
+                case Keys.Backspace:
+                    editor.editor_backspace();
+                    break;
+                case Keys.F2:
+                    if (editor.file_path != null)
+                    {
+                        editor.editor_save_to_file();
+                    }
+                    break;
+                case Keys.Enter:
+                    editor.editor_insert_new_line();
+                    break;
+                case Keys.Delete:
+                    editor.editor_delete();
+                    break;
+                case Keys.Up:
+                    if (editor.cursor_row > 0)
+                    {
+                        editor.cursor_row -= 1;
+                    }
+                    break;
+                case Keys.Down:
+                    editor.cursor_row += 1;
+                    break;
+                case Keys.Left:
+                    if (editor.cursor_col > 0) {
+                        editor.cursor_col -= 1;
+                    }
+                    break;
+                case Keys.Right:
+                    editor.cursor_col +=1;
+                    break;
+            }
+        }
+        private void textInput(TextInputEventArgs t)
+        {
+            editor.editor_insert_text_before_cursor(t.AsString);
+        }
     }
 }
