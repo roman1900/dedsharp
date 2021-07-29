@@ -20,7 +20,7 @@ namespace dedsharp
 				System.Environment.Exit(1);
 			}
 			this.program = GL.CreateProgram();
-			GLExtra.attach_shaders_to_program(shaders,3,this.program);
+			GLExtra.attach_shaders_to_program(shaders,shaders.Length,this.program);
 			if(!GLExtra.link_program(this.program)){
 				System.Environment.Exit(1);
 			}
