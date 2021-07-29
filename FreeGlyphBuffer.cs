@@ -80,28 +80,14 @@ namespace dedsharp
 			GL.BindVertexArray(vao);
 			vbo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer,vbo);
-			GL.BufferData<Free_Glyph>(BufferTarget.ArrayBuffer,Marshal.SizeOf<Free_Glyph>() * glyphs.Length,glyphs,BufferUsageHint.DynamicDraw);
+			GL.BufferData<Free_Glyph>(BufferTarget.ArrayBuffer,Marshal.SizeOf<Free_Glyph>() * FREE_GLYPH_BUFFER_CAP,glyphs,BufferUsageHint.DynamicDraw);
 			for (Free_Gylph_Attr attr = 0; attr < Free_Gylph_Attr.COUNT_FREE_GLYPH_ATTRS; ++attr) {
-				
-				switch (glyph_attr_defs[(int)attr].type) {
-					case VertexAttribPointerType.Float:
-						GL.VertexAttribPointer((int)attr,
-												glyph_attr_defs[(int)attr].comps,
-												glyph_attr_defs[(int)attr].type,
-												false,
-												Marshal.SizeOf<Free_Glyph>(),
-												glyph_attr_defs[(int)attr].offset);
-						break;
-					case VertexAttribPointerType.Int:
-						GL.VertexAttribIPointer((int)attr,
-												glyph_attr_defs[(int)attr].comps,
-												VertexAttribIntegerType.Int, //TODO: need to handle for differing int types 
-												Marshal.SizeOf<Free_Glyph>(),
-												glyph_attr_defs[(int)attr].offset);
-						break;
-					default:
-						throw(new ArgumentOutOfRangeException("unreachable"));
-				}
+				GL.VertexAttribPointer((int)attr,
+				 								glyph_attr_defs[(int)attr].comps,
+				 								glyph_attr_defs[(int)attr].type,
+				 								false,
+				 								Marshal.SizeOf<Free_Glyph>(),
+				 								glyph_attr_defs[(int)attr].offset);
 				GL.EnableVertexAttribArray((int)attr);
 				GL.VertexAttribDivisor((int)attr,1);
 			}
@@ -133,21 +119,22 @@ namespace dedsharp
 					atlas_height = face.Glyph.Bitmap.Rows;
 				}
 			}
+			
+			glyphs_texture = GL.GenTexture();
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.GenTextures(1,out glyphs_texture);
 			GL.BindTexture(TextureTarget.Texture2D,glyphs_texture);
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMagFilter,new int[]{(int)TextureMagFilter.Linear});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureMinFilter,new int[]{(int)TextureMinFilter.Linear});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureWrapS,new int[]{(int)TextureWrapMode.ClampToEdge});
 			GL.TexParameterI(TextureTarget.Texture2D,TextureParameterName.TextureWrapT,new int[]{(int)TextureWrapMode.ClampToEdge});
 			GL.PixelStore(PixelStoreParameter.UnpackAlignment,1);
-			GL.TexImage2D(TextureTarget.Texture2D,0,PixelInternalFormat.R16,atlas_width,atlas_height,0,PixelFormat.Red,PixelType.UnsignedByte,new IntPtr());
+			GL.TexImage2D(TextureTarget.Texture2D,0,PixelInternalFormat.R16,atlas_width,atlas_height,0,PixelFormat.Red,PixelType.UnsignedByte,(IntPtr)null);
 			int x = 0;
 			for (uint i = 32; i < 128; ++i){
 				face.LoadChar(i,LoadFlags.Render,LoadTarget.Normal);
 				face.Glyph.RenderGlyph(RenderMode.Normal);
-				metrics[i].ax = (int)face.Glyph.Advance.X >> 6;
-				metrics[i].ay = (int)face.Glyph.Advance.Y >> 6;
+				metrics[i].ax = (int)face.Glyph.Advance.X ;//>> 6;
+				metrics[i].ay = (int)face.Glyph.Advance.Y ;//>> 6;
 				metrics[i].bw = face.Glyph.Bitmap.Width;
 				metrics[i].bh = face.Glyph.Bitmap.Rows;
 				metrics[i].bl = face.Glyph.BitmapLeft;
@@ -163,6 +150,8 @@ namespace dedsharp
 								PixelFormat.Red,
 								PixelType.UnsignedByte,
 								face.Glyph.Bitmap.Buffer);
+				
+				x += face.Glyph.Bitmap.Width;
 			}
 		}
 		public void free_glyph_buffer_use()
@@ -218,7 +207,7 @@ namespace dedsharp
 
 				Free_Glyph glyph = new Free_Glyph();
 				glyph.pos = new Vector2(x2, -y2);
-				glyph.size = new Vector2(w, h);
+				glyph.size = new Vector2(w, -h);
 				glyph.uv_pos = new Vector2(metric.tx, 0.0f);
 				glyph.uv_size = new Vector2(metric.bw / (float) atlas_width, metric.bh / (float) atlas_height);
 				glyph.fg_color = fg_color;

@@ -7,6 +7,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
 using System;
+using System.Diagnostics;
 using SharpFont;
 
 
@@ -15,7 +16,8 @@ namespace dedsharp
 	
     public class Window : GameWindow
     {
-		public static uint FREE_GLYPH_FONT_SIZE = 64;
+		private Stopwatch sw = Stopwatch.StartNew();
+		public static uint FREE_GLYPH_FONT_SIZE = 20;
 		public static int ZOOM_OUT_GLYPH_THRESHOLD = 30;
 		public static Vector2 camera_pos = new Vector2();
         public static Vector2 camera_vel = new Vector2();
@@ -36,9 +38,8 @@ namespace dedsharp
 		{
 			float max_line_len = 0.0f;
 			fgb.free_glyph_buffer_use();
-
-			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION], this.Size.X, this.Size.Y);
-			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],this.RenderTime / 1000.0f);
+			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION], (float)this.Size.X, (float)this.Size.Y);
+			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],sw.Elapsed.TotalMilliseconds / 1000.0f);
 			GL.Uniform2(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_POS],camera_pos.X,camera_pos.Y);
 			GL.Uniform1(fgb.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_SCALE],camera_scale);
 
@@ -65,11 +66,11 @@ namespace dedsharp
 				cursor_pos.X = fgb.free_glyph_buffer_cursor_pos(line.chars,new Vector2(0.0f,cursor_pos.Y),editor.cursor_col);
 			}
 			cr.cursor_renderer_use();
-			GL.Uniform2(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION],this.Size.X,this.Size.Y);
-			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],this.RenderTime / 1000);
+			GL.Uniform2(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_RESOLUTION],(float)this.Size.X,(float)this.Size.Y);
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_TIME],(float) sw.Elapsed.TotalMilliseconds / 1000.0f);
 			GL.Uniform2(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_POS],camera_pos.X,camera_pos.Y);
 			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CAMERA_SCALE], camera_scale);
-			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CURSOR_HEIGHT], FREE_GLYPH_FONT_SIZE);
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_CURSOR_HEIGHT], (float)FREE_GLYPH_FONT_SIZE);
 
 			cr.cursor_renderer_move_to(cursor_pos);
 			cr.cursor_renderer_draw();
@@ -96,7 +97,7 @@ namespace dedsharp
 		protected override void OnRenderFrame(FrameEventArgs args)
 		{
 			base.OnRenderFrame(args);
-			GL.ClearColor(0.0f,0.0f,0.0f,1.0f);
+			
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			render_editor_into_fgb();
 			SwapBuffers();
@@ -116,16 +117,16 @@ namespace dedsharp
 			//TODO: exception checking
 			Library library = new Library();
 			const string font_file_path = "./VictorMono-Regular.ttf";
-			Face face = new Face(library, font_file_path);
+			Face face = new Face(library, font_file_path,0);
 			uint pixel_size = FREE_GLYPH_FONT_SIZE;
 			face.SetPixelSizes(0,pixel_size);
-			
-
+			GL.Viewport(0,0,Size.X,Size.Y);
+			GL.ClearColor(0.0f,0.0f,0.0f,1.0f);
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha,BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.DebugOutput);
 			DebugProc MCB = MessageCallback;
-			GL.DebugMessageCallback(MCB,new System.IntPtr(0));
+			GL.DebugMessageCallback(MCB,(IntPtr)0);
 			fgb = new FreeGlyphBuffer(face,
                         	"./shaders/free_glyph.vert",
                         	"./shaders/free_glyph.frag");

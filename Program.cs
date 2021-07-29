@@ -36,6 +36,7 @@ namespace dedsharp
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings(){
                 Title="Text Editor",
                 Size = new Vector2i(SCREEN_WIDTH,SCREEN_HEIGHT),
+                API = ContextAPI.OpenGL,
             };
 
             using (window = new Window(GameWindowSettings.Default,nativeWindowSettings,editor))
@@ -78,7 +79,7 @@ namespace dedsharp
                     }
                     break;
                 case Keys.Down:
-                    editor.cursor_row -= 1;
+                    editor.cursor_row += 1;
                     break;
                 case Keys.Left:
                     if (editor.cursor_col > 0) {
@@ -86,7 +87,7 @@ namespace dedsharp
                     }
                     break;
                 case Keys.Right:
-                    editor.cursor_row +=1;
+                    editor.cursor_col +=1;
                     break;
             }
         }
