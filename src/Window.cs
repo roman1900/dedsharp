@@ -175,12 +175,27 @@ namespace dedsharp
                 case Keys.Left:
                     if (editor.cursor_col > 0) {
                         editor.cursor_col -= 1;
-                    }
+                    } else {
+						if (editor.cursor_row > 0)	
+						{
+							editor.cursor_row -=1;
+							editor.cursor_col = editor.lines[editor.cursor_row].size;
+						}
+					}
 					cr.cursor_renderer_use();
 					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Right:
-                    editor.cursor_col +=1;
+					if	(editor.cursor_col < editor.lines[editor.cursor_row].size)
+						editor.cursor_col +=1;
+					else 
+					{
+						if (editor.size > editor.cursor_row)
+						{
+							editor.cursor_col =0;
+							editor.cursor_row +=1;
+						}
+					}
 					cr.cursor_renderer_use();
 					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
