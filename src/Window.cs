@@ -26,7 +26,7 @@ namespace dedsharp
 		private CursorRenderer cr;
 		public static void MessageCallback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, System.IntPtr message, System.IntPtr userParam )
 		{
-			Console.WriteLine($"GL CALLBACK: type = {type} severity = {severity} message = {Marshal.PtrToStringAuto(message)}");
+			Console.WriteLine($"GL CALLBACK: type = {type} severity = {severity} message = {Marshal.PtrToStringAnsi(message)}");
 		}
 		
 		public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings,Editor editor) : base(gameWindowSettings,nativeWindowSettings) {
