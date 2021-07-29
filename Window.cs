@@ -140,6 +140,8 @@ namespace dedsharp
                     break;
                 case Keys.Backspace:
                     editor.editor_backspace();
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.F2:
                     if (editor.file_path != null)
@@ -149,32 +151,46 @@ namespace dedsharp
                     break;
                 case Keys.Enter:
                     editor.editor_insert_new_line();
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Delete:
                     editor.editor_delete();
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Up:
                     if (editor.cursor_row > 0)
                     {
                         editor.cursor_row -= 1;
                     }
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Down:
                     editor.cursor_row += 1;
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Left:
                     if (editor.cursor_col > 0) {
                         editor.cursor_col -= 1;
                     }
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
                 case Keys.Right:
                     editor.cursor_col +=1;
+					cr.cursor_renderer_use();
+					GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
                     break;
             }
         }
         private void textInput(TextInputEventArgs t)
         {
             editor.editor_insert_text_before_cursor(t.AsString);
+			cr.cursor_renderer_use();
+			GL.Uniform1(cr.uniforms[(int)Uniforms.Uniform_Slot.UNIFORM_SLOT_LAST_STROKE],(float)sw.ElapsedMilliseconds / 1000.0f);
         }
     }
 }
