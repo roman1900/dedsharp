@@ -193,7 +193,7 @@ namespace dedsharp
 			}
 			return pos.X;
 		}
-		public void free_glyph_buffer_render_line_sized(string text,Vector2 pos,Vector4 fg_color, Vector4 bg_color)
+		public void free_glyph_buffer_render_line_sized(string text,ref Vector2 pos,Vector4 fg_color, Vector4 bg_color)
 		{
 			for (int i = 0; i < text.Length; ++i){
 				Glyph_Metric metric = metrics[(int)text[i]];

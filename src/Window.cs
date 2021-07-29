@@ -15,7 +15,7 @@ namespace dedsharp
     public class Window : GameWindow
     {
 		private Stopwatch sw = Stopwatch.StartNew();
-		public static uint FREE_GLYPH_FONT_SIZE = 12;
+		public static uint FREE_GLYPH_FONT_SIZE = 64;
 		public static int ZOOM_OUT_GLYPH_THRESHOLD = 30;
 		public static Vector2 camera_pos = new Vector2();
         public static Vector2 camera_vel = new Vector2();
@@ -48,7 +48,7 @@ namespace dedsharp
 				Editor.Line line = editor.lines[row];
 				Vector2 begin = new Vector2(0, -(float)row * FREE_GLYPH_FONT_SIZE);
 				Vector2 end = begin;
-				fgb.free_glyph_buffer_render_line_sized(line.chars,end,new Vector4(1.0f),new Vector4(0.0f));
+				fgb.free_glyph_buffer_render_line_sized(line.chars,ref end,new Vector4(1.0f),new Vector4(0.0f));
 				float line_len = Math.Abs(end.X - begin.X);
 				if (line_len > max_line_len){
 					max_line_len = line_len;
